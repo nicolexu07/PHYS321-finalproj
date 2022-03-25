@@ -1,0 +1,9 @@
+- [ ] Research range on priors (William)
+  - [ ] M
+  - [ ] m
+  - [ ] T
+  - [ ] _e_
+  - [ ] I
+  - [ ] &omega;
+  - [ ] &tau;
+  - [ ] v<sub>0</sub> 
