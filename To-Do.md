@@ -7,3 +7,5 @@
   - [ ] &omega;
   - [ ] &tau;
   - [ ] v<sub>0</sub> 
+- [ ] Code simulations to be used to test MCMC
+  - [ ] 
