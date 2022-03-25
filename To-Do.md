@@ -10,6 +10,6 @@
 - [ ] Code simulations to be used to test MCMC
   - [ ] 
 - [ ] Download and load data (William & Nicole)
-  - [ ] Function(s) to download all .tbl files (William)
+  - [X] Function(s) to download all .tbl files (William)
   - [ ] Function to load radial velocity data from .tbl to pandas DataFrame or numpy array (Nicole)
   - [ ] Function to load info from .tbl files (each file has lines about the observation such as star name, telescope used, etc. that come before the actual radial velocity data) (Nicole)
