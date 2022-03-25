@@ -13,3 +13,6 @@
   - [X] Function(s) to download all .tbl files (William)
   - [ ] Function to load radial velocity data from .tbl to pandas DataFrame or numpy array (Nicole)
   - [ ] Function to load info from .tbl files (each file has lines about the observation such as star name, telescope used, etc. that come before the actual radial velocity data) (Nicole)
+- [ ] Format data
+  - [ ] Dates are in Julian days, find out how to convert to seconds
+  - [ ] Double-check proper data types in each column  
