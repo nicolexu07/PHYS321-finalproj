@@ -17,3 +17,7 @@ March 25 to 31st
 - [ ] Format data
   - [ ] Dates are in Julian days, find out how to convert to seconds
   - [ ] Double-check proper data types in each column  
+- [ ] Implement radial velocity function v(t)=&kappa;[cos(_f_+&omega;)+_e_*cos(&omega;)]+v<sub>0</sub>
+  - [ ] Make function for &kappa;
+  - [ ] Solve u-_e_*sin(u)=2&pi;(t-&tau;)/_T_ for u using scipy.optimize.fsolve
+  - [ ] Make function for _f_
