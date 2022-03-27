@@ -33,6 +33,12 @@ The angles _I_ and &omega; can be found by consulting a diagram https://en.wikip
 * _I_: (-&pi;, &pi;]
 * &omega;: [0, &pi;/2]
 
-&tau; is any time at which the orbiting body passes through the pericenter i.e. it is closest to the central body. for simplicity take the smallest such time. this means that &tau; will have the same range as T
+&tau; is any time at which the orbiting body passes through the pericenter i.e. it is closest to the central body. for simplicity take the smallest such time. this means that &tau; will have the same range as _T_.
+
+Taking the most extreme known orbital periods of exoplanets https://arxiv.org/pdf/1808.06796.pdf, https://arxiv.org/pdf/2107.02805.pdf: 
+* _T_, &tau;: [3282.3503 s, 3.46896x10<sup>13</sup> s]
+
+Tentatively put the range on v<sub>0</sub> to be very wide until more information can be found:
+* v<sub>0</sub>: [-1000 m/s, 1000 m/s]
 
 ## Likelihoods
