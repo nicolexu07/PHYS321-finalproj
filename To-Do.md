@@ -23,7 +23,7 @@ March 25th to 31st
 - [ ] Format data
   - [ ] Dates are in Julian days, find out how to convert to seconds
   - [ ] Double-check proper data types in each column  
-- [ ] Test functions
+- [ ] Test functions https://docs.python.org/3/library/unittest.html
   - [ ] Test loading data
   - [ ] Test loading info
   - [ ] Test formatting data
