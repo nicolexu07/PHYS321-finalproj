@@ -13,7 +13,7 @@ Ch. 5.1 in https://arxiv.org/pdf/1706.01629.pdf gives an expectation formula for
 * v<sub>0</sub>: the mean radial velocity of the center of mass
 
 We will combine m and M into one parameter:
-* (2&pi;G)<sup>1/3</sup>_m_/(_M_+_m_)<sup>2/3</sup>
+* &mu;=(2&pi;G)<sup>1/3</sup>_m_/(_M_+_m_)<sup>2/3</sup>
 
 ## Priors
 
@@ -27,7 +27,7 @@ However, not every mass is equally as likely, "for every 1,000 dwarf stars we fi
 * _m_: [0, 0.02291 M<sub>&#9737;</sub>]
 
 These ranges and the assumption that _M_+_m_&approx;_M_ reduce the possiblities of the mass parameter to:
-* (2&pi;G)<sup>1/3</sup>_m_/(_M_+_m_)<sup>2/3</sup>: [0, 1.246059x10<sup>6</sup>]
+* &mu;: [0, 1.246059x10<sup>6</sup>]
 
 The angles _I_ and &omega; can be found by consulting a diagram https://en.wikipedia.org/wiki/Argument_of_periapsis#/media/File:Orbit1.svg:
 * _I_: (-&pi;, &pi;]
