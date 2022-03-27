@@ -1,6 +1,7 @@
 import wget
 import os
 import requests
+import pandas as pd
 
 cwd = os.getcwd()
 
@@ -46,6 +47,40 @@ def download_radial():
     links = get_links('https://exoplanetarchive.ipac.caltech.edu/bulk_data_download/wget_RADIAL.bat')
     for link in links:
         download_from_link(link)
+
+
+
+def get_data(filename):
+    """ (str) -> (pd.DataFrame)
+    Takes a file name as input 
+    Returns a pandas dataframe with 3 cols corresponding
+    to days, radial velocity, and uncertainty
+    """
+    
+    df = pd.read_table(f'./data/{filename}', header=None, skiprows=22, delim_whitespace=True)
+    
+    return df
+        
+    
+ 
+ def get_obs_info(filename):
+    """ (str) -> (np.array)
+    Takes file name as input and returns numpy array with
+    observation information as entries 
+    """
+    df = pd.read_table(f'./data/{filename}', header=None, nrows=19, delim_whitespace=True)
+    
+    # converting into numpy array with relevant info as entries
+    temp = pd.DataFrame.to_numpy(df)
+    
+    info = []
+    for entry in temp:
+        info.append(entry[2])
+    
+    info = np.array(info)
+    
+    return info
+
 
 
 if __name__ == "__main__":
