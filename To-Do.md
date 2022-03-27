@@ -21,3 +21,7 @@ March 25 to 31st
   - [ ] Make function for &kappa;
   - [ ] Solve u-_e_*sin(u)=2&pi;(t-&tau;)/_T_ for u using scipy.optimize.fsolve
   - [ ] Make function for _f_
+- [ ] Code MCMC
+  * _The way I was thinking about this was to create a class that would hold all the data and methods we could need. The class would take radial velocity data as an input and store it as an instance attribute. It would also have an emcee EnsembleSampler object as an attribute, and the sampler's chain once it has been run as another attribute. It would also have methods to run the sampler, get the chain, plot trace plots, plot corner plots, plot data, plot example fits to the data, git MAP parameters, etc. Having all this contained in a class would make it easier to run MCMCs for many different files and store the results in a way that is easily accesible. -William_ 
+  - [ ] Make new class called BinarySystem
+  - [ ] \_\_init\_\_ method should take radial velocity data as input  
