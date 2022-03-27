@@ -2,6 +2,7 @@ import wget
 import os
 import requests
 import pandas as pd
+import numpy as np
 
 cwd = os.getcwd()
 
@@ -63,16 +64,18 @@ def get_data(filename):
         
     
  
- def get_obs_info(filename):
+def get_obs_info(filename):
     """ (str) -> (np.array)
     Takes file name as input and returns numpy array with
     observation information as entries 
     """
     df = pd.read_table(f'./data/{filename}', header=None, nrows=19, delim_whitespace=True)
-    
+    df = df.drop(1, axis=1)
+    return df
+    """
     # converting into numpy array with relevant info as entries
     temp = pd.DataFrame.to_numpy(df)
-    
+    return df
     info = []
     for entry in temp:
         info.append(entry[2])
@@ -80,6 +83,7 @@ def get_data(filename):
     info = np.array(info)
     
     return info
+    """
 
 
 
