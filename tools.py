@@ -1,4 +1,3 @@
-from operator import index
 import wget
 import os
 import requests
