@@ -3,6 +3,8 @@ import os
 import requests
 import pandas as pd
 import numpy as np
+from io import StringIO
+import re
 
 cwd = os.getcwd()
 
@@ -51,39 +53,36 @@ def download_radial():
 
 
 
-def get_data(filename):
-    """ (str) -> (pd.DataFrame)
+def get_data(filename, path='data/'):
+    """ (str, str) -> (pd.DataFrame)
     Takes a file name as input 
     Returns a pandas dataframe with 3 cols corresponding
     to days, radial velocity, and uncertainty
+    Converts Julian days to seconds setting the earliest time as 0
     """
-    
-    df = pd.read_table(f'./data/{filename}', header=None, skiprows=22, delim_whitespace=True)
-    
+    lines = "0,1,2\n" + "".join([re.sub(r"\s+", ',', line)[1::]+'\n' for line in open(f'./{path}{filename}') 
+                     if not (line.startswith('\ '[0]) or line.startswith('|'))])
+    #print(lines)
+    df = pd.read_csv(StringIO(lines), sep=',', index_col=False)
+    df = df.rename(columns={'0':0, '1':1, '2':2})
+    df[0] = (df[0]-min(df[0]))*86400
     return df
         
     
  
-def get_obs_info(filename):
-    """ (str) -> (np.array)
+def get_obs_info(filename, path='data/'):
+    """ (str, str) -> (np.array)
     Takes file name as input and returns numpy array with
     observation information as entries 
     """
-    df = pd.read_table(f'./data/{filename}', header=None, nrows=19, delim_whitespace=True)
-    df = df.drop(1, axis=1)
+    lines = '0,1,2\n' + "".join([re.sub(r"\s+", ',', line)[1::]+'\n' for line in open(f'./{path}{filename}') 
+                     if line.startswith('\ '[0])])
+    #print(lines)
+    df = pd.read_csv(StringIO(lines), sep=',', index_col=False)
+    df = df.drop('1', axis=1)
+    df =df.rename(columns={'0':0, '2':1})
     return df
-    """
-    # converting into numpy array with relevant info as entries
-    temp = pd.DataFrame.to_numpy(df)
-    return df
-    info = []
-    for entry in temp:
-        info.append(entry[2])
-    
-    info = np.array(info)
-    
-    return info
-    """
+
 
 
 
