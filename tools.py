@@ -83,18 +83,7 @@ def get_obs_info(filename, path='data/'):
     df = df.drop('1', axis=1)
     df =df.rename(columns={'0':0, '2':1})
     return df
-    """
-    # converting into numpy array with relevant info as entries
-    temp = pd.DataFrame.to_numpy(df)
-    return df
-    info = []
-    for entry in temp:
-        info.append(entry[2])
-    
-    info = np.array(info)
-    
-    return info
-    """
+
 
 
 
