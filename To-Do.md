@@ -11,10 +11,10 @@ March 25th to 31st
   - [ ] v<sub>0</sub> 
 - [ ] Code data generation to be used to test MCMC
   - [ ] t
-- [ ] Implement radial velocity function v(t)=&kappa;[cos(_f_+&omega;)+_e_*cos(&omega;)]+v<sub>0</sub>
-  - [ ] Make function for &kappa;
-  - [ ] Solve u-_e_*sin(u)=2&pi;(t-&tau;)/_T_ for u using scipy.optimize.fsolve
-  - [ ] Make function for _f_=2*arctan[ sqrt((1+_e_)/(1-_e_)) * tan(u/2)]
+- [X] Implement radial velocity function v(t)=&kappa;[cos(_f_+&omega;)+_e_*cos(&omega;)]+v<sub>0</sub> (Nicole)
+  - [X] Make function for &kappa;
+  - [X] Solve u-_e_*sin(u)=2&pi;(t-&tau;)/_T_ for u using scipy.optimize.fsolve
+  - [X] Make function for _f_=2*arctan[ sqrt((1+_e_)/(1-_e_)) * tan(u/2)]
 - [ ] Download and load data (William & Nicole)
   - [X] Function(s) to download all .tbl files (William)
   - [X] Function to load radial velocity data from .tbl to pandas DataFrame or numpy array (Nicole)
