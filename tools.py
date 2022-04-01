@@ -12,6 +12,10 @@ def get_data(filename, path='data/'):
     Takes a file name as input. 
     Returns a pandas dataframe with 3 cols corresponding to days, radial velocity, and uncertainty.
     Converts Julian days to seconds setting the earliest time as 0.
+    
+    >>> temp = get_data('test_data.tbl', '')
+    >>> np.all(temp[0]==pd.Series([0, 86400]))
+    True
     """
     lines = "0,1,2\n" + "".join([re.sub(r"\s+", ',', line)[1::]+'\n' for line in open(f'./{path}{filename}') 
                      if not (line.startswith('\ '[0]) or line.startswith('|'))])
@@ -38,15 +42,35 @@ def get_obs_info(filename, path='data/'):
 
 
 # function to use in scipy.optimize.fsolve
-def func(u, tau, T, e):
+def func_u(u, t, tau, T, e):
     return u-e*np.sin(u)-((2*np.pi/T)*(t-tau))
 
 
 
 def solve_for_u(t, tau, T, e):
+    """ (np.array, num, num, num) -> (np.array)
+    Numerically solves u-e*np.sin(u)-((2*np.pi/T)*(t-tau))=0 for u.
+
+
+    When t=tau we expect u=0
+    Numerical solver gives approximately 0
+    >>> e = np.random.uniform(0, 1)
+    >>> T = np.random.uniform(3282.3503, 3.46896e13)
+    >>> tau = np.random.uniform(3282.3503, 3.46896e13)    
+    >>> temp = solve_for_u(tau, tau, T, e)
+    >>> abs(temp) < 1e-7
+    array([ True])
+
+    When e=0 the function is linear
+    >>> e = 0
+    >>> t = np.random.uniform(0, T, 10)
+    >>> temp = solve_for_u(t, tau, T, e)
+    >>> np.all(abs(2*np.pi*(t-tau)/T - temp) < 1e-7)
+    True
+    """
     # since esinu < u, using RHS of eqn as guess 
     u_guess = (2*np.pi/T)*(t-tau)
-    root = fsolve(func, u_guess, args=(tau, T, e))
+    root = fsolve(func_u, u_guess, args=(t, tau, T, e))
     
     return root 
 
@@ -79,6 +103,11 @@ def get_star_id(filename, path='data/'):
 def find_files_for_star(star_id):
     """ (str) -> (list)
     Finds all the files in /data/ with with data pertaining to star_id.
+    
+    >>> find_files_for_star('CrazyFrog')
+    Traceback (most recent call last):
+        ...
+    ValueError: No files with this star id found.
     """
     star_id = re.sub(r'\s+', '', star_id)
     files = list_files('data')
