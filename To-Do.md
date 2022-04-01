@@ -27,6 +27,8 @@ March 25th to 31st
   - [X] Test loading data
   - [ ] Test loading info
   - [X] Test formatting data
+- [ ] Misc.
+  - [ ] Function to find data files given star ID 
 
 Apr. 1st to 8th
 - [ ] Code MCMC
