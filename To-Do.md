@@ -1,4 +1,3 @@
-March 25th to 31st
 - [ ] Research range on priors (William)
   - [ ] M
   - [ ] m
@@ -29,9 +28,20 @@ March 25th to 31st
   - [X] Test formatting data
 - [ ] Misc.
   - [ ] Function to find data files given star ID 
-
-Apr. 1st to 8th
 - [ ] Code MCMC
   * _The way I was thinking about this was to create a class that would hold all the data and methods we could need. The class would take radial velocity data as an input and store it as an instance attribute. It would also have an emcee EnsembleSampler object as an attribute, and the sampler's chain once it has been run as another attribute. It would also have methods to run the sampler, get the chain, plot trace plots, plot corner plots, plot data, plot example fits to the data, git MAP parameters, etc. Having all this contained in a class would make it easier to run MCMCs for many different files and store the results in a way that is easily accesible. -William_ 
   - [ ] Make new class called BinarySystem
-  - [ ] \_\_init\_\_ method should take radial velocity data as input  
+  - [ ] \_\_init\_\_ method should take radial velocity data as input
+  - [ ] Method to run MCMC
+  - [ ] Method to get samples
+  - [ ] Method to make trace plot
+  - [ ] Method to make corner plot
+  - [ ] Method to plot data and sample fits
+  - [ ] Method to marginalize over parameters
+  - [ ] Method to find MAP parameter 
+- [ ] Systems of special interest and waysto test the limits of our MCMC and our model
+  - [ ] HD 142, binary star system with 2-3 exoplanets
+  - [ ] Generate fake data of a system with no exoplanets (&mu;=0, expect v(r)=constant)
+  - [ ] Generate fake data for system with orbital plane perpendicular to the line of sight (_I_=&pm;&pi;/2, expect v(r)=constant)
+  - [ ] Generate and place outliers into data
+  - [ ] Remove chunks of data to simulate equipment failure    
