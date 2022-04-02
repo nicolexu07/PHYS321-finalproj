@@ -26,6 +26,7 @@
   - [X] Test loading data
   - [ ] Test loading info
   - [X] Test formatting data
+  - [ ] Test solve_for_u function
 - [ ] Misc.
   - [ ] Function to find data files given star ID 
 - [ ] Code MCMC
