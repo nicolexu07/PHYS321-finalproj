@@ -3,8 +3,7 @@ import numpy as np
 from io import StringIO
 import re
 from scipy.optimize import fsolve
-
-
+from astropy import constants as const
 
 def get_data(filename, path='data/'):
     """ (str, str) -> (pd.DataFrame)
@@ -34,12 +33,13 @@ def get_obs_info(filename, path='data/'):
     df = pd.read_csv(StringIO(lines), sep=',', index_col=False)
     df = df.drop('1', axis=1)
     df =df.rename(columns={'0':0, '2':1})
+    
     return df
 
 
 
 # function to use in scipy.optimize.fsolve
-def func(u, tau, T, e):
+def func(t, u, tau, T, e):
     return u-e*np.sin(u)-((2*np.pi/T)*(t-tau))
 
 
@@ -54,7 +54,7 @@ def solve_for_u(t, tau, T, e):
 
 
 def radial_velocity(t, m, M, T, I, e, v_0, omega, tau):
-    kappa = ((2*np.pi*G)**(1/3)*m*np.sin(I))/(T**(1/3)*(M+m)**(2/3)*np.sqrt(1-e**2))
+    kappa = ((2*np.pi*const.G)**(1/3)*m*np.sin(I))/(T**(1/3)*(M+m)**(2/3)*np.sqrt(1-e**2))
     u = solve_for_u(t, tau, T, e)
     f = 2*arctan(np.sqrt((1+e)/(1-e))*tan(u/2))
     rad_vel = kappa*(np.cos(f+omega)+e*np.cos(omega))+v_0
