@@ -39,7 +39,7 @@ def get_obs_info(filename, path='data/'):
 
 
 # function to use in scipy.optimize.fsolve
-def func(t, u, tau, T, e):
+def funct(u, t, tau, T, e):
     return u-e*np.sin(u)-((2*np.pi/T)*(t-tau))
 
 
@@ -47,16 +47,16 @@ def func(t, u, tau, T, e):
 def solve_for_u(t, tau, T, e):
     # since esinu < u, using RHS of eqn as guess 
     u_guess = (2*np.pi/T)*(t-tau)
-    root = fsolve(func, u_guess, args=(tau, T, e))
+    root = fsolve(funct, u_guess, args=(t, tau, T, e))
     
     return root 
 
 
 
 def radial_velocity(t, m, M, T, I, e, v_0, omega, tau):
-    kappa = ((2*np.pi*const.G)**(1/3)*m*np.sin(I))/(T**(1/3)*(M+m)**(2/3)*np.sqrt(1-e**2))
+    kappa = ((2*np.pi*const.G.value)**(1/3)*m*np.sin(I))/(T**(1/3)*(M+m)**(2/3)*np.sqrt(1-e**2))
     u = solve_for_u(t, tau, T, e)
-    f = 2*arctan(np.sqrt((1+e)/(1-e))*tan(u/2))
+    f = 2*np.arctan(np.sqrt((1+e)/(1-e))*np.tan(u/2))
     rad_vel = kappa*(np.cos(f+omega)+e*np.cos(omega))+v_0
     
     return rad_vel
