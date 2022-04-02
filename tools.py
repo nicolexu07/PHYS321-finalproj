@@ -96,6 +96,15 @@ def list_files(dir):
 def get_star_id(filename, path='data/'):
     """ (str, str) -> (str)
     Returns the star id of the star in filename.
+
+    >>> get_star_id('UID_0302504_RVC_002.tbl')
+    'HATS-2'
+
+    >>> get_star_id('test_data.tbl', '')
+    'TestStar'
+
+    >>> get_star_id('UID_0250999_RVC_001.tbl')
+    'GJ3634'
     """
     return get_obs_info(filename, path)[1][0]
 
@@ -108,16 +117,19 @@ def find_files_for_star(star_id):
     Traceback (most recent call last):
         ...
     ValueError: No files with this star id found.
+
+    >>> find_files_for_star('HD 142')
+    ['UID_0000522_RVC_001.tbl', 'UID_0000522_RVC_002.tbl']
     """
     star_id = re.sub(r'\s+', '', star_id)
     files = list_files('data')
     ans = []
     for file in files:
-        if get_star_id(file) == id:
+        if get_star_id(file) == star_id:
             ans.append(file)
-    if len(ans) != 0:
-        return ans
-    raise ValueError('No files with this star id found.')
+    if len(ans) == 0:
+        raise ValueError('No files with this star id found.')
+    return ans
 
     
 if __name__ == "__main__":
