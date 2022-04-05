@@ -1,8 +1,9 @@
+March 25th to 31st
 - [ ] Research range on priors (William)
   - [ ] M
   - [ ] m
   - [ ] &mu;
-  - [ ] _T_
+  - [ ] T
   - [X] _e_
   - [X] I
   - [X] &omega;
@@ -22,48 +23,15 @@
 - [X] Format data
   - [X] Dates are in Julian days, find out how to convert to seconds
   - [X] Double-check proper data types in each column  
-- [ ] Test functions with docstring 
-  - [X] Test loading data (William)
+- [ ] Test functions https://docs.python.org/3/library/unittest.html
+  - [X] Test loading data
   - [ ] Test loading info
-  - [X] Test formatting data (William)
-  - [X] Test solve_for_u function (William & Nicole)
-  - [X] Test functions for finding files with data pertaining to a given star (William)
-- [ ] Misc. (William & Nicole)
-  - [X] Function to find data files given star ID (William)
+  - [X] Test formatting data
+- [ ] Misc.
+  - [ ] Function to find data files given star ID 
+
+Apr. 1st to 8th
 - [ ] Code MCMC
   * _The way I was thinking about this was to create a class that would hold all the data and methods we could need. The class would take radial velocity data as an input and store it as an instance attribute. It would also have an emcee EnsembleSampler object as an attribute, and the sampler's chain once it has been run as another attribute. It would also have methods to run the sampler, get the chain, plot trace plots, plot corner plots, plot data, plot example fits to the data, git MAP parameters, etc. Having all this contained in a class would make it easier to run MCMCs for many different files and store the results in a way that is easily accesible. -William_ 
   - [ ] Make new class called BinarySystem
-  - [ ] \_\_init\_\_ method should take radial velocity data as input
-  - [ ] Method to run MCMC
-  - [ ] Method to get samples
-  - [ ] Method to make trace plot
-  - [ ] Method to make corner plot
-  - [ ] Method to plot data and sample fits
-  - [ ] Method to marginalize over parameters
-  - [ ] Method to find MAP parameter 
-- [ ] Report writing (William & Nicole)
-  - [ ] Introduction
-    - [ ] Describe problem
-    - [ ] Present equations
-  - [ ] Methods
-    - [ ] Describe MCMC and emcee package
-    - [ ] Present range on parameters (priors)
-  - [ ] Results for stars from some of the online datasets
-    - [ ] Corner plot
-    - [ ] Compare to literature values from other methods
-  - [ ] Stress tests of MCMC
-    - [ ] Describe scenarios where the MCMC might be pushed to its limit (see bottom of document)
-    - [ ] Present results for these scenarios
-    - [ ] Talk about the significance of the results
-  - [ ] Conclusion
-  - [ ] Misc. 
-    - [ ] Format equations and in-text references 
-    - [ ] Format figures
-    - [ ] Citations
-- [ ] Systems of special interest and ways to test the limits of our MCMC and our model
-  - [ ] HD 142, binary star system with 2-3 exoplanets
-  - [ ] Generate fake data of a system with no exoplanets (&mu;=0, expect v(r)=constant)
-  - [ ] Generate fake data for system with orbital plane perpendicular to the line of sight (_I_=&pm;&pi;/2, expect v(r)=constant)
-  - [ ] Generate and place outliers into data (would require us to make a new child class)
-  - [ ] Remove chunks of data to simulate equipment failure
-  - [ ] Adding different kinds of noise to the data     
+  - [ ] \_\_init\_\_ method should take radial velocity data as input  
