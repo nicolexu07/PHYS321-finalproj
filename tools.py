@@ -53,8 +53,8 @@ def solve_for_u(t, tau, T, e):
 
 
 
-def radial_velocity(t, m, M, T, I, e, v_0, omega, tau):
-    kappa = ((2*np.pi*const.G.value)**(1/3)*m*np.sin(I))/(T**(1/3)*(M+m)**(2/3)*np.sqrt(1-e**2))
+def radial_velocity(t, mu, T, I, e, v_0, omega, tau):
+    kappa = mu*np.sin(I)/(T**(1/3)*np.sqrt(1-e**2))
     u = solve_for_u(t, tau, T, e)
     f = 2*np.arctan(np.sqrt((1+e)/(1-e))*np.tan(u/2))
     rad_vel = kappa*(np.cos(f+omega)+e*np.cos(omega))+v_0
