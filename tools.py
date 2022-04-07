@@ -147,7 +147,7 @@ def find_files_for_telescope(telescope):
 
 
 
-def get_uncertainties(telescope):
+def get_uncertainties_telescope(telescope):
     """ (str) -> (list)
     Returns list of uncertainty values for a given telescope across all files in data
     """
@@ -160,9 +160,9 @@ def get_uncertainties(telescope):
     return uncertainties
 
 
-def plot_uncertainty_histogram(telescope, bins=100):
+def plot_telescope_uncertainty_hist(telescope, bins=100):
     """(str, int, tup) -> ()
-    Plots histogram of uncertainty values
+    Plots histogram of uncertainty values for a given telescope
     """
     unc = get_uncertainties(telescope)
     plt.hist(unc, bins=bins)
