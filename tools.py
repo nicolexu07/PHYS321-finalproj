@@ -160,7 +160,18 @@ def get_uncertainties(telescope):
     return uncertainties
 
 
+def plot_uncertainty_histogram(telescope, bins=100):
+    """(str, int, tup) -> ()
+    Plots histogram of uncertainty values
+    """
+    unc = get_uncertainties(telescope)
+    plt.hist(unc, bins=bins)
+    plt.xlabel('Uncertainty Range')
+    plt.ylabel('Number of Samples')
+    plt.title(f'Histogram from Uncertainties of {telescope} Telescope')
 
+    
+    
 class BinarySystem:
     """
     Represents a Binary System
