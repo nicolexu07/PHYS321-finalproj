@@ -146,7 +146,6 @@ def find_files_for_telescope(telescope):
     return ans
 
 
-
 def get_uncertainties_telescope(telescope):
     """ (str) -> (list)
     Returns list of uncertainty values for a given telescope across all files in data
@@ -164,13 +163,60 @@ def plot_telescope_uncertainty_hist(telescope, bins=100):
     """(str, int, tup) -> ()
     Plots histogram of uncertainty values for a given telescope
     """
-    unc = get_uncertainties(telescope)
+    unc = get_uncertainties_telescope(telescope)
     plt.hist(unc, bins=bins)
     plt.xlabel('Uncertainty Range')
     plt.ylabel('Number of Samples')
     plt.title(f'Histogram from Uncertainties of {telescope} Telescope')
 
     
+    
+    
+def get_instrument(filename, path='data/'):
+    """ (str, str) -> (str)
+    Returns the instrument of the star in filename.
+    """
+    return get_obs_info(filename, path)[1][13]
+
+
+def find_files_for_instrument(instrument):
+    """ (str) -> (list)
+    Finds all the files in /data/ with with data pertaining to instrument.
+    """
+    instrument = re.sub(r'\s+', '', instrument)
+    files = list_files('data')
+    ans = []
+    for file in files:
+        if get_instrument(file) == instrument:
+            ans.append(file)
+    if len(ans) == 0:
+        raise ValueError('No files with this instrument found.')
+    
+    return ans
+
+
+def get_uncertainties_instrument(instrument):
+    """ (str) -> (list)
+    Returns list of uncertainty values for a given telescope across all files in data
+    """
+    files = find_files_for_instrument(instrument)
+    uncertainties = []
+    for file in files:
+        df = get_data(f'{file}')
+        uncertainties += list(df.iloc[:, 2])
+        
+    return uncertainties
+
+
+def plot_instrumental_uncertainty_hist(instrument, bins=100):
+    """(str, int, tup) -> ()
+    Plots histogram of uncertainty values
+    """
+    unc = get_uncertainties_instrument(instrument)
+    plt.hist(unc, bins=bins)
+    plt.xlabel('Uncertainty Range')
+    plt.ylabel('Number of Samples')
+    plt.title(f'Histogram from Uncertainties of {instrument} Instrument')    
     
 class BinarySystem:
     """
