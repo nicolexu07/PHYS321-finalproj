@@ -50,6 +50,9 @@
   - [ ] Likelihood (Nicole)
   - [ ] Prior (Nicole)
   - [ ] Posterior (Nicole)
+- [ ] Formatting Jupyter Notebook
+  - [ ] Writing intro - description of parameters and model (Nicole) 
+  - [ ] Calling functions for MCMC
 - [ ] Report writing (William & Nicole)
   - [ ] Introduction
     - [ ] Describe problem
