@@ -146,7 +146,129 @@ def find_files_for_telescope(telescope):
     return ans
 
 
+def get_uncertainties_telescope(telescope):
+    """ (str) -> (list)
+    Returns list of uncertainty values for a given telescope across all files in data
+    """
+    files = find_files_for_telescope(telescope)
+    uncertainties = []
+    for file in files:
+        df = get_data(f'{file}')
+        uncertainties += list(df.iloc[:, 2])
+        
+    return uncertainties
 
+
+def plot_telescope_uncertainty_hist(telescope, bins=100):
+    """(str, int, tup) -> ()
+    Plots histogram of uncertainty values for a given telescope
+    """
+    unc = get_uncertainties_telescope(telescope)
+    plt.hist(unc, bins=bins)
+    plt.xlabel('Uncertainty Range')
+    plt.ylabel('Number of Samples')
+    plt.title(f'Histogram from Uncertainties of {telescope} Telescope')
+
+    
+    
+    
+def get_instrument(filename, path='data/'):
+    """ (str, str) -> (str)
+    Returns the instrument of the star in filename.
+    """
+    return get_obs_info(filename, path)[1][13]
+
+
+def find_files_for_instrument(instrument):
+    """ (str) -> (list)
+    Finds all the files in /data/ with with data pertaining to instrument.
+    """
+    instrument = re.sub(r'\s+', '', instrument)
+    files = list_files('data')
+    ans = []
+    for file in files:
+        if get_instrument(file) == instrument:
+            ans.append(file)
+    if len(ans) == 0:
+        raise ValueError('No files with this instrument found.')
+    
+    return ans
+
+
+def get_uncertainties_instrument(instrument):
+    """ (str) -> (list)
+    Returns list of uncertainty values for a given instrument across all files in data
+    """
+    files = find_files_for_instrument(instrument)
+    uncertainties = []
+    for file in files:
+        df = get_data(f'{file}')
+        uncertainties += list(df.iloc[:, 2])
+        
+    return uncertainties
+
+
+def plot_instrumental_uncertainty_hist(instrument, bins=100):
+    """(str, int, tup) -> ()
+    Plots histogram of uncertainty values
+    """
+    unc = get_uncertainties_instrument(instrument)
+    plt.hist(unc, bins=bins)
+    plt.xlabel('Uncertainty Range')
+    plt.ylabel('Number of Samples')
+    plt.title(f'Histogram from Uncertainties of {instrument} Instrument')    
+    
+    
+    
+def plot_uncertainty_for_file(filename):
+    """ (str) -> ()
+    Plots radial velocity vs uncertainty for a dataset 'filename'
+    """
+    df = get_data(filename)
+    radial_velocities = list(df.iloc[:, 1])
+    uncertainties = list(df.iloc[:, 2])
+    
+    star_id = get_star_id(filename)
+    
+    plt.scatter(radial_velocities, uncertainties)
+    plt.xlabel('Uncertainty (m/s)')
+    plt.ylabel('Radial Velocity (m/s)')
+    plt.title(f'Relationship between Radial Velocity and {star_id}')
+    
+    
+def plot_uncertainty_correlation():
+    """ () -> ()
+    Plots radial velocity vs associated uncertainty across all systems in data
+    """
+
+    files = list_files('data')
+    radial_velocities = []
+    uncertainties = []
+    for file in files[:200]:
+        df = get_data(file)
+        radial_velocities += list(df.iloc[:, 1])
+        uncertainties += list(df.iloc[:, 2])
+
+    plt.scatter(radial_velocities, uncertainties, s=0.1)
+    plt.xlim(-100, 100)
+    plt.ylim(0, 50)  
+    
+    
+def plot_uncertainty_correlation_telescope(telescope):
+    """ (str) -> ()
+    Plots radial velocity vs uncertainty for all data points of a given telescope
+    """
+    files = find_files_for_telescope(telescope)
+    radial_velocities = []
+    uncertainties = []
+    for file in files[:200]:
+        df = get_data(file)
+        radial_velocities += list(df.iloc[:, 1])
+        uncertainties += list(df.iloc[:, 2])
+
+    plt.scatter(radial_velocities, uncertainties)
+    
+    
 class BinarySystem:
     """
     Represents a Binary System
