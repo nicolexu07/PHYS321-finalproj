@@ -7,6 +7,7 @@ from astropy import constants as const
 import emcee
 import corner
 import matplotlib.pyplot as plt
+import os
 
 def get_data(filename, path='data/'):
     """ (str, str) -> (pd.DataFrame)
@@ -118,7 +119,32 @@ def find_files_for_star(star_id):
             ans.append(file)
     if len(ans) == 0:
         raise ValueError('No files with this star id found.')
-    return 
+    return ans
+
+
+
+def get_telescope(filename, path='data/'):
+    """ (str, str) -> (str)
+    Returns the telescope of the star in filename.
+    """
+    return get_obs_info(filename, path)[1][12]
+
+
+def find_files_for_telescope(telescope):
+    """ (str) -> (list)
+    Finds all the files in /data/ with with data pertaining to telescope.
+    """
+    telescope = re.sub(r'\s+', '', telescope)
+    files = list_files('data')
+    ans = []
+    for file in files:
+        if get_telescope(file) == telescope:
+            ans.append(file)
+    if len(ans) == 0:
+        raise ValueError('No files with this telescope found.')
+    
+    return ans
+
 
 
 class BinarySystem:
