@@ -1,20 +1,23 @@
 - [ ] Research range on priors (William)
-  - [ ] M
-  - [ ] m
-  - [ ] &mu;
-  - [ ] _T_
+  - [X] M
+  - [X] m
+  - [X] &mu;
+  - [X] _T_
   - [X] _e_
   - [X] I
   - [X] &omega;
-  - [ ] &tau;
-  - [ ] v<sub>0</sub> 
-- [ ] Code data generation to be used to test MCMC
-  - [ ] t
+  - [X] &tau;
+  - [X] v<sub>0</sub> 
+- [ ] Code data generation to be used to test MCMC (Nicole)
+  - [X] Generate parameters
+  - [X] Generate radial velocity data given parameters
+  - [ ] Establish uncertainty on generated data using histograms of known data uncertainty
+  - [ ] Add Gaussian noise
 - [X] Implement radial velocity function v(t)=&kappa;[cos(_f_+&omega;)+_e_*cos(&omega;)]+v<sub>0</sub> (Nicole)
   - [X] Make function for &kappa;
   - [X] Solve u-_e_*sin(u)=2&pi;(t-&tau;)/_T_ for u using scipy.optimize.fsolve
   - [X] Make function for _f_=2*arctan[ sqrt((1+_e_)/(1-_e_)) * tan(u/2)]
-- [ ] Download and load data (William & Nicole)
+- [X] Download and load data (William & Nicole)
   - [X] Function(s) to download all .tbl files (William)
   - [X] Function to load radial velocity data from .tbl to pandas DataFrame or numpy array (Nicole)
   - [X] Function to load info from .tbl files (each file has lines about the observation such as star name, telescope used, etc. that come before the actual radial velocity data) (Nicole)
@@ -28,19 +31,25 @@
   - [X] Test formatting data (William)
   - [X] Test solve_for_u function (William & Nicole)
   - [X] Test functions for finding files with data pertaining to a given star (William)
+  - [ ] Test initializing BinarySystem
+  - [ ] Test running MCMC in BinarySystem
+  - [ ] Test plotting results in BinarySystem
 - [ ] Misc. (William & Nicole)
   - [X] Function to find data files given star ID (William)
-- [ ] Code MCMC
-  * _The way I was thinking about this was to create a class that would hold all the data and methods we could need. The class would take radial velocity data as an input and store it as an instance attribute. It would also have an emcee EnsembleSampler object as an attribute, and the sampler's chain once it has been run as another attribute. It would also have methods to run the sampler, get the chain, plot trace plots, plot corner plots, plot data, plot example fits to the data, git MAP parameters, etc. Having all this contained in a class would make it easier to run MCMCs for many different files and store the results in a way that is easily accesible. -William_ 
+  - [ ] Function to find data files given telescope/instrument (Nicole)
+- [ ] Code MCMC (William & Nicole) 
   - [ ] Make new class called BinarySystem
-  - [ ] \_\_init\_\_ method should take radial velocity data as input
-  - [ ] Method to run MCMC
-  - [ ] Method to get samples
-  - [ ] Method to make trace plot
-  - [ ] Method to make corner plot
+  - [ ] \_\_init\_\_ method should take radial velocity data as input (William & Nicole)
+  - [X] Method to run MCMC (William)
+  - [X] Method to get samples (William)
+  - [X] Method to make trace plot (William)
+  - [X] Method to make corner plot (William)
   - [ ] Method to plot data and sample fits
   - [ ] Method to marginalize over parameters
   - [ ] Method to find MAP parameter 
+  - [ ] Likelihood (Nicole)
+  - [ ] Prior (Nicole)
+  - [ ] Posterior (Nicole)
 - [ ] Report writing (William & Nicole)
   - [ ] Introduction
     - [ ] Describe problem
