@@ -218,6 +218,57 @@ def plot_instrumental_uncertainty_hist(instrument, bins=100):
     plt.ylabel('Number of Samples')
     plt.title(f'Histogram from Uncertainties of {instrument} Instrument')    
     
+    
+    
+def plot_uncertainty_for_file(filename):
+    """ (str) -> ()
+    Plots radial velocity vs uncertainty for a dataset 'filename'
+    """
+    df = get_data(filename)
+    radial_velocities = list(df.iloc[:, 1])
+    uncertainties = list(df.iloc[:, 2])
+    
+    star_id = get_star_id(filename)
+    
+    plt.scatter(radial_velocities, uncertainties)
+    plt.xlabel('Uncertainty (m/s)')
+    plt.ylabel('Radial Velocity (m/s)')
+    plt.title(f'Relationship between Radial Velocity and {star_id}')
+    
+    
+def plot_uncertainty_correlation():
+    """ () -> ()
+    Plots radial velocity vs associated uncertainty across all systems in data
+    """
+
+    files = list_files('data')
+    radial_velocities = []
+    uncertainties = []
+    for file in files[:200]:
+        df = get_data(file)
+        radial_velocities += list(df.iloc[:, 1])
+        uncertainties += list(df.iloc[:, 2])
+
+    plt.scatter(radial_velocities, uncertainties, s=0.1)
+    plt.xlim(-100, 100)
+    plt.ylim(0, 50)  
+    
+    
+def plot_uncertainty_correlation_telescope(telescope):
+    """ (str) -> ()
+    Plots radial velocity vs uncertainty for all data points of a given telescope
+    """
+    files = find_files_for_telescope(telescope)
+    radial_velocities = []
+    uncertainties = []
+    for file in files[:200]:
+        df = get_data(file)
+        radial_velocities += list(df.iloc[:, 1])
+        uncertainties += list(df.iloc[:, 2])
+
+    plt.scatter(radial_velocities, uncertainties)
+    
+    
 class BinarySystem:
     """
     Represents a Binary System
