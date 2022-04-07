@@ -197,7 +197,7 @@ def find_files_for_instrument(instrument):
 
 def get_uncertainties_instrument(instrument):
     """ (str) -> (list)
-    Returns list of uncertainty values for a given telescope across all files in data
+    Returns list of uncertainty values for a given instrument across all files in data
     """
     files = find_files_for_instrument(instrument)
     uncertainties = []
