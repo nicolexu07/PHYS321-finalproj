@@ -147,6 +147,20 @@ def find_files_for_telescope(telescope):
 
 
 
+def get_uncertainties(telescope):
+    """ (str) -> (list)
+    Returns list of uncertainty values for a given telescope across all files in data
+    """
+    files = find_files_for_telescope(telescope)
+    uncertainties = []
+    for file in files:
+        df = get_data(f'{file}')
+        uncertainties += list(df.iloc[:, 2])
+        
+    return uncertainties
+
+
+
 class BinarySystem:
     """
     Represents a Binary System
