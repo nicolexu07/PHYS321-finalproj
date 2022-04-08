@@ -9,6 +9,7 @@ import corner
 import matplotlib.pyplot as plt
 import os
 
+
 def get_data(filename, path='data/'):
     """ (str, str) -> (pd.DataFrame)
     Takes a file name as input. 
@@ -45,6 +46,9 @@ def get_obs_info(filename, path='data/'):
 
 # function to use in scipy.optimize.fsolve
 def func_u(u, t, tau, T, e):
+    """
+    Function to use in scipy.optimize.fsolve
+    """
     return u-e*np.sin(u)-((2*np.pi/T)*(t-tau))
 def solve_for_u(t, tau, T, e):
     """ (np.array, num, num, num) -> (np.array)
@@ -269,6 +273,26 @@ def plot_uncertainty_correlation_telescope(telescope):
     plt.scatter(radial_velocities, uncertainties)
     
     
+    
+    def gen_uncertainty(radial_velocities, instrument):
+    """ (np.array, str) -> (np.array)
+    Returns an array of uncertainty values associated with each 
+    radial velocity value in radial_velocities array
+    """
+    # the uncertainty distribution we will draw from 
+    uncertainty_dist = get_uncertainties_instrument(instrument)
+    
+    uncertainties = []
+    #assigning uncertainties by drawing randomly from distribution 
+    for v in radial_velocities:
+        index = np.random.randint(0, len(uncertainty_dist)-1)
+        uncertainties.append(uncertainty_dist[index])
+
+    return uncertainties
+    
+    
+    
+    
 class BinarySystem:
     """
     Represents a Binary System
@@ -279,12 +303,19 @@ class BinarySystem:
 
         If no inputs are given, then raise a ValueError. 
         If data is given, then use that data (assumes proper format).
-        If parameters and num_points are given, then generates num_points radial velocity data (adds Gaussian noise).
-        If only num_points is given, then generates random parameters and num_points radial velocity data (adds Gaussian noise).
+        If parameters and num_points are given, then generates num_points radial velocity data (adds noise).
+        If only num_points is given, then generates random parameters and num_points radial velocity data (adds noise).
         """
         if (data is None) and (parameters is None) and (num_points is None):
             raise ValueError('At least one initializing argument must be specified.')
         elif (data is None) and (parameters is None):
+            # assigning a random instrument 
+            # selecting a random file from directory
+            all_files = list_files('data')
+            index = np.random.randint(0, len(all_files)-1)
+            # finding associated instrument 
+            instrument = get_instrument(all_files[index])
+            
             # generating values for parameters
             self.mu = np.random.uniform(0, 1.246059e6) # in kg
             self.e = np.random.uniform(0, 1)
@@ -294,7 +325,7 @@ class BinarySystem:
             self.tau = np.random.uniform(3282.3503, 3.46896e13) # in seconds
             self.v_0 = np.random.uniform(-10000, 10000) # in m/s
             
-            # generating radial velocity data from 
+            # generating radial velocity data from parameters
             t = np.linspace(0, 3e8, num_points)
             self.time = t
             radial_velocities = radial_velocity(t, self.mu, self.T, 
@@ -302,11 +333,19 @@ class BinarySystem:
             # adding random Gaussian noise
             radial_velocities += np.random.normal(20, 10, len(t))
             self.radial_velocity = radial_velocities
-            self.uncertainty = np.array([]) #how do we determine uncertainty when generating data?
+            
+            self.uncertainty = gen_uncertainty(radial_velocities, instrument)
 
             self.sampler = None
             self.samples = None
         elif (data is None):
+            # assigning a random instrument 
+            # selecting a random file from directory
+            all_files = list_files('data')
+            index = np.random.randint(0, len(all_files)-1)
+            # finding associated instrument 
+            instrument = get_instrument(all_files[index])
+            
             #generate random values from given parameters
             self.mu = param[0]
             self.e = param[1]
@@ -323,7 +362,7 @@ class BinarySystem:
             # adding random Gaussian noise
             radial_velocities += np.random.normal(20, 10, len(t))
             self.radial_velocity = radial_velocities
-            self.uncertainty = np.array([]) #how do we determine uncertainty when generating data?
+            self.uncertainty = gen_uncertainty(radial_velocities, instrument)
         
             self.sampler = None
             self.samples = None
