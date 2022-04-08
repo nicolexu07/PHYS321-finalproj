@@ -274,7 +274,7 @@ def plot_uncertainty_correlation_telescope(telescope):
     
     
     
-    def gen_uncertainty(radial_velocities, instrument):
+def gen_uncertainty(radial_velocities, instrument):
     """ (np.array, str) -> (np.array)
     Returns an array of uncertainty values associated with each 
     radial velocity value in radial_velocities array
