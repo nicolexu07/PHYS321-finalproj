@@ -9,6 +9,8 @@ import corner
 import matplotlib.pyplot as plt
 import os
 
+from sympy import li
+
 
 def get_data(filename, path='data/'):
     """ (str, str) -> (pd.DataFrame)
@@ -318,13 +320,13 @@ class BinarySystem:
             self.instrument = get_instrument(all_files[index])
             
             # generating values for parameters
-            self.mu = np.random.uniform(0, 1.246059e6) # in kg
+            self.mu = np.random.choice(np.linspace(0, 1.246059e6, 10000)) # in kg
             self.e = np.random.uniform(0, 1)
             self.I = np.random.uniform(-np.pi, np.pi)
             self.omega = np.random.uniform(0, np.pi/2)
-            self.T = np.random.uniform(3282.3503, 3.46896e13) # in seconds
-            self.tau = np.random.uniform(3282.3503, 3.46896e13) # in seconds
-            self.v_0 = np.random.uniform(-9000, 9000) # in m/s
+            self.T = np.random.choice(np.linspace(3282.3503, 3.46896e13, 10000)) # in seconds
+            self.tau = np.random.choice(np.linspace(3282.3503, self.T, 10000)) # in seconds
+            self.v_0 = np.random.choice(np.linspace(-9000, 9000, 10000)) # in m/s
             
             # generating radial velocity data from parameters
             t = np.linspace(0, 3e8, num_points)
@@ -535,6 +537,56 @@ class BinarySystem:
             fig = corner.corner(flat_samples, labels=BinarySystem.labels);
         else:
             fig = corner.corner(flat_samples, labels=BinarySystem.labels, quantiles=quantiles);
+
+    def param_hist(self, param, bins, limits=None, flat=True, thin=1, discard=100):
+        """ (self, int, int, tuple, boolean, int, int) -> (np.array, np.array)
+        Returns the bin edges and corresponding counts of a histogram of the parameter of the system 
+        index by the param input.
+        """
+        if limits is None:
+            val = self.get_samples(flat=flat, thin=thin, discard=discard)
+            ans = []
+            for entry in val:
+                ans.append(entry[param])
+            return np.histogram(ans, bins=bins)
+        else:
+            val = self.get_samples(flat=flat, thin=thin, discard=discard)
+            ans = []
+            for entry in val:
+                ans.append(entry[param])
+            return np.histogram(ans, bins=bins, range=limits)
+
+    def param_hist_plot(self, param, bins, limits=None, flat=True, thin=1, discard=100, actual_value=None):
+        """ (self, int, int, tuple, boolean, int, int, num) -> ()
+        Plots the histogram of the parameter indexed by param.
+        """
+        if actual_value is None:
+            val = self.get_samples(flat=flat, thin=thin, discard=discard)
+            ans = []
+            for entry in val:
+                ans.append(entry[param])
+            plt.figure()
+            plt.hist(ans, bins=bins)
+            plt.xlabel(BinarySystem.labels[param])
+            plt.ylabel("Count")
+            plt.show()
+        else:
+            val = self.get_samples(flat=flat, thin=thin, discard=discard)
+            ans = []
+            for entry in val:
+                ans.append(entry[param])
+            plt.figure()
+            plt.hist(ans, bins=bins)
+            plt.vlines(actual_value, ymin=0, ymax=1.25*max(ans), color='black')
+            plt.xlabel(BinarySystem.labels[param])
+            plt.ylabel("Count")
+            plt.show()
+
+    def plot_samples(self, num_samples, thin=1, discard=100, alpha=0.2):
+        """ (self, int, int, int) -> ()
+        Plots sample curves from the results of the MCMC. 
+        """
+        pass
 
 if __name__ == "__main__":
     import doctest
