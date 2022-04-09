@@ -330,8 +330,7 @@ class BinarySystem:
             self.time = t
             radial_velocities = radial_velocity(t, self.mu, self.T, 
                                                       self.I, self.e, self.v_0, self.omega, self.tau)
-            # adding random Gaussian noise
-            radial_velocities += np.random.normal(20, 10, len(t))
+
             self.uncertainty = gen_uncertainty(radial_velocities, instrument)
             
             # we should add noise to model's radial velocity (based on generated parameters)
@@ -364,8 +363,7 @@ class BinarySystem:
             self.time = t
             radial_velocities = radial_velocity(t, self.m, self.M, self.T, 
                                                       self.I, self.e, self.v_0, self.omega, self.tau)
-            # adding random Gaussian noise
-            radial_velocities += np.random.normal(20, 10, len(t))
+
             self.uncertainty = gen_uncertainty(radial_velocities, instrument)
             
             # we should add noise to model's radial velocity (based on generated parameters)
