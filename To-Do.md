@@ -1,4 +1,4 @@
-- [ ] Research range on priors (William)
+- [X] Research range on priors (William)
   - [X] M
   - [X] m
   - [X] &mu;
@@ -8,11 +8,11 @@
   - [X] &omega;
   - [X] &tau;
   - [X] v<sub>0</sub> 
-- [ ] Code data generation to be used to test MCMC (Nicole)
+- [X] Code data generation to be used to test MCMC (Nicole)
   - [X] Generate parameters
   - [X] Generate radial velocity data given parameters
-  - [ ] Establish uncertainty on generated data using histograms of known data uncertainty
-  - [ ] Add Gaussian noise
+  - [X] Establish uncertainty on generated data using histograms of known data uncertainty
+  - [X] Add Gaussian noise
 - [X] Implement radial velocity function v(t)=&kappa;[cos(_f_+&omega;)+_e_*cos(&omega;)]+v<sub>0</sub> (Nicole)
   - [X] Make function for &kappa;
   - [X] Solve u-_e_*sin(u)=2&pi;(t-&tau;)/_T_ for u using scipy.optimize.fsolve
@@ -22,24 +22,24 @@
   - [X] Function to load radial velocity data from .tbl to pandas DataFrame or numpy array (Nicole)
   - [X] Function to load info from .tbl files (each file has lines about the observation such as star name, telescope used, etc. that come before the actual radial velocity data) (Nicole)
   - [X] Improve load data function to take file path as parameter and format data (William)
-- [X] Format data
+- [X] Format data (William)
   - [X] Dates are in Julian days, find out how to convert to seconds
   - [X] Double-check proper data types in each column  
-- [ ] Test functions with docstring 
+- [ ] Test functions (William & Nicole)
   - [X] Test loading data (William)
-  - [ ] Test loading info
+  - [X] Test loading info (William & Nicole)
   - [X] Test formatting data (William)
   - [X] Test solve_for_u function (William & Nicole)
   - [X] Test functions for finding files with data pertaining to a given star (William)
-  - [ ] Test initializing BinarySystem
-  - [ ] Test running MCMC in BinarySystem
-  - [ ] Test plotting results in BinarySystem
+  - [X] Test initializing BinarySystem (William)
+  - [X] Test running MCMC in BinarySystem (William)
+  - [X] Test plotting results in BinarySystem (William)
+  - [ ] Test marginalizing over parameters (plots & histograms)
 - [ ] Misc. (William & Nicole)
   - [X] Function to find data files given star ID (William)
-  - [ ] Function to find data files given telescope/instrument (Nicole)
-- [ ] Code MCMC (William & Nicole) 
-  - [ ] Make new class called BinarySystem
-  - [ ] \_\_init\_\_ method should take radial velocity data as input (William & Nicole)
+  - [X] Function to find data files given telescope/instrument (Nicole)
+- [ ] Code MCMC with a class called BinarySystem (William & Nicole) 
+  - [X] \_\_init\_\_ method should take radial velocity data as input (William & Nicole)
   - [X] Method to run MCMC (William)
   - [X] Method to get samples (William)
   - [X] Method to make trace plot (William)
@@ -47,9 +47,9 @@
   - [ ] Method to plot data and sample fits
   - [ ] Method to marginalize over parameters
   - [ ] Method to find MAP parameter 
-  - [ ] Likelihood (Nicole)
-  - [ ] Prior (Nicole)
-  - [ ] Posterior (Nicole)
+  - [X] Likelihood (Nicole)
+  - [X] Prior (Nicole)
+  - [X] Posterior (Nicole)
 - [ ] Formatting Jupyter Notebook
   - [ ] Writing intro - description of parameters and model (Nicole) 
   - [ ] Calling functions for MCMC
