@@ -61,6 +61,7 @@ def solve_for_u(t, tau, T, e):
     >>> temp = solve_for_u(tau, tau, T, e)
     >>> abs(temp) < 1e-7
     array([ True])
+    
     When e=0 the function is linear
     >>> e = 0
     >>> t = np.random.uniform(0, T, 10)
@@ -288,7 +289,7 @@ def gen_uncertainty(radial_velocities, instrument):
         index = np.random.randint(0, len(uncertainty_dist)-1)
         uncertainties.append(uncertainty_dist[index])
 
-    return uncertainties
+    return np.array(uncertainties)
     
     
     
@@ -314,7 +315,7 @@ class BinarySystem:
             all_files = list_files('data')
             index = np.random.randint(0, len(all_files)-1)
             # finding associated instrument 
-            instrument = get_instrument(all_files[index])
+            self.instrument = get_instrument(all_files[index])
             
             # generating values for parameters
             self.mu = np.random.uniform(0, 1.246059e6) # in kg
@@ -323,7 +324,7 @@ class BinarySystem:
             self.omega = np.random.uniform(0, np.pi/2)
             self.T = np.random.uniform(3282.3503, 3.46896e13) # in seconds
             self.tau = np.random.uniform(3282.3503, 3.46896e13) # in seconds
-            self.v_0 = np.random.uniform(-10000, 10000) # in m/s
+            self.v_0 = np.random.uniform(-9000, 9000) # in m/s
             
             # generating radial velocity data from parameters
             t = np.linspace(0, 3e8, num_points)
@@ -331,7 +332,7 @@ class BinarySystem:
             radial_velocities = radial_velocity(t, self.mu, self.T, 
                                                       self.I, self.e, self.v_0, self.omega, self.tau)
 
-            self.uncertainty = gen_uncertainty(radial_velocities, instrument)
+            self.uncertainty = gen_uncertainty(radial_velocities, self.instrument)
             
             # we should add noise to model's radial velocity (based on generated parameters)
             # to get our final simulated data for radial velocity 
@@ -348,23 +349,23 @@ class BinarySystem:
             all_files = list_files('data')
             index = np.random.randint(0, len(all_files)-1)
             # finding associated instrument 
-            instrument = get_instrument(all_files[index])
+            self.instrument = get_instrument(all_files[index])
             
             #generate random values from given parameters
-            self.mu = param[0]
-            self.e = param[1]
-            self.I = param[2]
-            self.omega = param[3]
-            self.T = param[4]
-            self.tau = param[5]
-            self.v_0 = param[6]
+            self.mu = parameters[0]
+            self.e = parameters[1]
+            self.I = parameters[2]
+            self.omega = parameters[3]
+            self.T = parameters[4]
+            self.tau = parameters[5]
+            self.v_0 = parameters[6]
 
             t = np.linspace(0, 3e8, num_points)
             self.time = t
-            radial_velocities = radial_velocity(t, self.m, self.M, self.T, 
+            radial_velocities = radial_velocity(t, self.mu, self.T, 
                                                       self.I, self.e, self.v_0, self.omega, self.tau)
 
-            self.uncertainty = gen_uncertainty(radial_velocities, instrument)
+            self.uncertainty = gen_uncertainty(radial_velocities, self.instrument)
             
             # we should add noise to model's radial velocity (based on generated parameters)
             # to get our final simulated data for radial velocity 
@@ -414,15 +415,15 @@ class BinarySystem:
     
     
     def log_likelihood(self, theta):
-        # note theta = [mu, T, I, e, v_0, omega, tau]
-        mu, T, I, e, v_0, omega, tau = theta 
+        # note theta = [mu, e, I, omega, T, tau, v_0]
+        mu, e, I, omega, T, tau, v_0 = theta 
         model = radial_velocity(self.time, mu, T, I, e, v_0, omega, tau)
         
         return -0.5*np.sum((self.radial_velocity - model)**2 / self.uncertainty**2 + np.log(2*np.pi*self.uncertainty**2))
         
 
     def log_prior(self, theta):
-        mu, T, I, e, v_0, omega, tau = theta 
+        mu, e, I, omega, T, tau, v_0 = theta 
         
         # based on prior research on allowed values 
         if 0> mu or 1.246059e6 <= mu:
@@ -443,10 +444,10 @@ class BinarySystem:
 
 
     def log_post(self, theta):
-        lp = log_prior(theta)
+        lp = self.log_prior(theta)
         if not np.isfinite(lp):
             return -np.inf
-        return lp + log_likelihood(theta, self.time, self.radial_velocity, self.uncertainty)
+        return lp + self.log_likelihood(theta)
     
     
     
@@ -454,8 +455,9 @@ class BinarySystem:
         """ (self, int, int) -> ()
         Sets up the MCMC in self.sampler with nwalkers walkers and ndim dimension.
         """
-        self.sampler = emcee.EnsembleSampler(nwalkers, ndim, BinarySystem.log_post, args=(self.time, self.radial_velocity, self.uncertainty))
-    
+        self.sampler = emcee.EnsembleSampler(nwalkers, ndim, self.log_post)
+        self.nwalkers = nwalkers
+
     def run_mcmc(self, num_iter, nwalkers=None, ndim=7):
         """ (self, int, int, int) -> ()
         Runs the MCMC with num_iter iterations.
@@ -466,14 +468,16 @@ class BinarySystem:
         elif self.sampler is None: #need to initialize the mcmc first
             self.initialize_mcmc(nwalkers, ndim)
         
-        initial_pos = np.array(np.random.uniform(0, 1.246059e6), #mu
+        # note [mu, e, I, omega, T, tau, v_0] = theta
+        initial_pos = [[np.random.uniform(0, 1.246059e6), #mu
                                 np.random.uniform(0, 1), #e
                                 np.random.uniform(-np.pi, np.pi), #I
                                 np.random.uniform(0, np.pi/2), #omega
                                 np.random.uniform(3282.3503, 3.46896e13), #T
                                 np.random.uniform(3282.3503, 3.46896e13), #tau
-                                np.random.uniform(-10000, 10000),) #v_0
-        
+                                np.random.uniform(-9999, 9999)] for i in range(self.nwalkers)] #v_0
+        initial_pos = np.array(initial_pos)
+
         self.sampler.run_mcmc(initial_pos, num_iter, progress=True)
 
     def get_samples(self, flat=False, thin=1, discard=0):
@@ -501,7 +505,8 @@ class BinarySystem:
     def plot_data(self, ls='', marker='.', color='blue'):
         plt.figure()
 
-        plt.errorbar(self.time, self.data, self.uncertainty, ls=ls, marker=marker, color=color)
+        plt.errorbar(self.time, self.radial_velocity, self.uncertainty, 
+                        ls=ls, marker=marker, color=color, elinewidth=0.5)
 
         plt.xlabel('Time (s)')
         plt.ylabel('Radial Velocity (m/s)')
@@ -511,7 +516,7 @@ class BinarySystem:
         """ (self, int, boolean, int, int) -> ()
         Displays trace plot of the MCMC.
         """
-        f, axes = plt.subplots(ndim, figsize=(10, 7), sharex=True)
+        f, axes = plt.subplots(ndim, figsize=(10, 15), sharex=True)
         samples = self.get_samples(flat=flat, thin=thin, discard=discard)
         for i in range(ndim):
             ax = axes[i]
@@ -522,14 +527,14 @@ class BinarySystem:
         axes[-1].set_xlabel("Step number");
 
     def corner(self, thin=15, discard=100, quantiles=None):
-        """ (self) -> ()
+        """ (self, int, int, list) -> ()
         Displays corner plot of the MCMC results
         """
         flat_samples = self.get_samples(flat=True, thin=thin, discard=discard)
         if quantiles is None:
             fig = corner.corner(flat_samples, labels=BinarySystem.labels);
         else:
-            fig = corner.corner(flat_samples, labels=BinarySystem.labels, quantiles=[0.16, 0.5, 0.84]);
+            fig = corner.corner(flat_samples, labels=BinarySystem.labels, quantiles=quantiles);
 
 if __name__ == "__main__":
     import doctest
