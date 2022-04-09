@@ -409,7 +409,7 @@ class BinarySystem:
         mu, T, I, e, v_0, omega, tau = theta 
         model = radial_velocity(self.time, mu, T, I, e, v_0, omega, tau)
         
-        return -np.sum((self.radial_velocity - model)**2 / 2*self.uncertainty - np.log(2*self.uncertainty))
+        return -0.5*np.sum((self.radial_velocity - model)**2 / self.uncertainty**2 + np.log(2*np.pi*self.uncertainty**2))
         
 
     def log_prior(self, theta):
