@@ -274,7 +274,7 @@ def plot_uncertainty_correlation_telescope(telescope):
     
     
     
-    def gen_uncertainty(radial_velocities, instrument):
+def gen_uncertainty(radial_velocities, instrument):
     """ (np.array, str) -> (np.array)
     Returns an array of uncertainty values associated with each 
     radial velocity value in radial_velocities array
@@ -411,17 +411,44 @@ class BinarySystem:
                 self.v_0]
         return np.array(ans)
     
-    @staticmethod
-    def log_likelihood():
-        pass
+    
+    
+    def log_likelihood(self, theta):
+        # note theta = [mu, T, I, e, v_0, omega, tau]
+        mu, T, I, e, v_0, omega, tau = theta 
+        model = radial_velocity(self.time, mu, T, I, e, v_0, omega, tau)
+        
+        return -0.5*np.sum((self.radial_velocity - model)**2 / self.uncertainty**2 + np.log(2*np.pi*self.uncertainty**2))
+        
 
-    @staticmethod
-    def log_prior():
-        pass
+    def log_prior(self, theta):
+        mu, T, I, e, v_0, omega, tau = theta 
+        
+        # based on prior research on allowed values 
+        if 0> mu or 1.246059e6 <= mu:
+            return -np.inf
+        elif 3282.3503 > T or 3.46896e13 < T:
+            return -np.inf
+        elif -np.pi >= I or np.pi < I:
+            return -np.inf
+        elif 0 > e or 1 <= e:
+            return -np.inf
+        elif -10000 > v_0 or 10000 < v_0:
+            return -np.inf
+        elif 0 > omega or np.pi/2 < omega:
+            return -np.inf
+        elif 3282.3503 > tau or 3.46896e13 < tau:
+            return -np.inf
+        return 0
 
-    @staticmethod
-    def log_post():
-        pass
+
+    def log_post(self, theta):
+        lp = log_prior(theta)
+        if not np.isfinite(lp):
+            return -np.inf
+        return lp + log_likelihood(theta, self.time, self.radial_velocity, self.uncertainty)
+    
+    
     
     def initialize_mcmc(self, nwalkers, ndim=7):
         """ (self, int, int) -> ()

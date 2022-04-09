@@ -39,6 +39,6 @@ Taking the most extreme known orbital periods of exoplanets https://arxiv.org/pd
 * _T_, &tau;: [3282.3503 s, 3.46896x10<sup>13</sup> s]
 
 Tentatively put the range on v<sub>0</sub> to be very wide until more information can be found:
-* v<sub>0</sub>: [-1000 m/s, 1000 m/s]
+* v<sub>0</sub>: [-10000 m/s, 10000 m/s]
 
 ## Likelihoods
