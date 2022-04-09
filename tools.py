@@ -424,7 +424,7 @@ class BinarySystem:
             return -np.inf
         elif 0 > e or 1 <= e:
             return -np.inf
-        elif -1000 > v_0 or 1000 < v_0:
+        elif -10000 > v_0 or 10000 < v_0:
             return -np.inf
         elif 0 > omega or np.pi/2 < omega:
             return -np.inf
