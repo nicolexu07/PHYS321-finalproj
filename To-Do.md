@@ -31,10 +31,6 @@
   - [X] Test formatting data (William)
   - [X] Test solve_for_u function (William & Nicole)
   - [X] Test functions for finding files with data pertaining to a given star (William)
-  - [X] Test initializing BinarySystem (William)
-  - [X] Test running MCMC in BinarySystem (William)
-  - [X] Test plotting results in BinarySystem (William)
-  - [ ] Test marginalizing over parameters (plots & histograms)
 - [ ] Misc. (William & Nicole)
   - [X] Function to find data files given star ID (William)
   - [X] Function to find data files given telescope/instrument (Nicole)
@@ -44,9 +40,9 @@
   - [X] Method to get samples (William)
   - [X] Method to make trace plot (William)
   - [X] Method to make corner plot (William)
-  - [ ] Method to plot data and sample fits
-  - [ ] Method to marginalize over parameters
-  - [ ] Method to find MAP parameter 
+  - [X] Method to plot data and sample fits (William)
+  - [X] Method to marginalize over parameters (William)
+  - [X] Method to find MAP parameter (William)
   - [X] Likelihood (Nicole)
   - [X] Prior (Nicole)
   - [X] Posterior (Nicole)
