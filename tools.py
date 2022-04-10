@@ -528,7 +528,7 @@ class BinarySystem:
             #ax.yaxis.set_label_coords(-0.1, 0.5)
         axes[-1].set_xlabel("Step number");
 
-    def corner(self, thin=15, discard=100, quantiles=None):
+    def corner(self, thin=15, discard=250, quantiles=None):
         """ (self, int, int, list) -> ()
         Displays corner plot of the MCMC results
         """
@@ -538,7 +538,7 @@ class BinarySystem:
         else:
             fig = corner.corner(flat_samples, labels=BinarySystem.labels, quantiles=quantiles);
 
-    def param_hist(self, param, bins, limits=None, flat=True, thin=1, discard=100):
+    def param_hist(self, param, bins, limits=None, flat=True, thin=1, discard=250):
         """ (self, int, int, tuple, boolean, int, int) -> (np.array, np.array)
         Returns the bin edges and corresponding counts of a histogram of the parameter of the system 
         index by the param input.
@@ -556,7 +556,7 @@ class BinarySystem:
                 ans.append(entry[param])
             return np.histogram(ans, bins=bins, range=limits)
 
-    def param_hist_plot(self, param, bins, limits=None, flat=True, thin=1, discard=100, actual_value=None):
+    def param_hist_plot(self, param, bins, limits=None, flat=True, thin=1, discard=250, actual_value=None):
         """ (self, int, int, tuple, boolean, int, int, num) -> ()
         Plots the histogram of the parameter indexed by param.
         """
@@ -582,11 +582,26 @@ class BinarySystem:
             plt.ylabel("Count")
             plt.show()
 
-    def plot_samples(self, num_samples, thin=1, discard=100, alpha=0.2):
+    def plot_samples(self, num_samples, thin=1, discard=250, alpha=0.2):
         """ (self, int, int, int) -> ()
         Plots sample curves from the results of the MCMC. 
         """
-        pass
+        samples = self.get_samples(flat=True, thin=thin, discard=discard)
+        indices = np.random.randint(0, len(samples), size=num_samples)
+        plt.figure()
+
+        t = np.linspace(min(self.time), max(self.time), 1000)
+        for idx in indices:
+            mu, e, I, omega, T, tau, v_0 = samples[idx]
+            y = radial_velocity(t, mu, T, I, e, v_0, omega, tau)
+            plt.plot(t, y, color='red', alpha=alpha)
+
+        plt.errorbar(self.time, self.radial_velocity, self.uncertainty, 
+                        ls='', marker='.', color='blue', elinewidth=0.5)
+
+        plt.xlabel('Time (s)')
+        plt.ylabel('Radial Velocity (m/s)')
+        plt.show()
 
 if __name__ == "__main__":
     import doctest
