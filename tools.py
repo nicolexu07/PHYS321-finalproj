@@ -78,8 +78,8 @@ def solve_for_u(t, tau, T, e):
     return root 
 
 
-def radial_velocity(t, mu, T, I, e, v_0, omega, tau):
-    kappa = mu*np.sin(I)/(T**(1/3)*np.sqrt(1-e**2))
+def radial_velocity(t, mu, T, e, v_0, omega, tau):
+    kappa = mu/(T**(1/3)*np.sqrt(1-e**2))
     u = solve_for_u(t, tau, T, e)
     f = 2*np.arctan(np.sqrt((1+e)/(1-e))*np.tan(u/2))
     rad_vel = kappa*(np.cos(f+omega)+e*np.cos(omega))+v_0
@@ -320,9 +320,8 @@ class BinarySystem:
             self.instrument = get_instrument(all_files[index])
             
             # generating values for parameters
-            self.mu = np.random.choice(np.linspace(0, 1.246059e6, 10000)) # in kg
+            self.mu = np.random.choice(np.linspace(-1.246059e6, 1.246059e6, 20000)) # in kg
             self.e = np.random.uniform(0, 1)
-            self.I = np.random.uniform(-np.pi, np.pi)
             self.omega = np.random.uniform(0, np.pi/2)
             self.T = np.random.choice(np.linspace(3282.3503, 3.46896e13, 10000)) # in seconds
             self.tau = np.random.choice(np.linspace(3282.3503, self.T, 10000)) # in seconds
@@ -332,9 +331,9 @@ class BinarySystem:
             t = np.linspace(0, 3e8, num_points)
             self.time = t
             radial_velocities = radial_velocity(t, self.mu, self.T, 
-                                                      self.I, self.e, self.v_0, self.omega, self.tau)
+                                                      self.e, self.v_0, self.omega, self.tau)
 
-            self.uncertainty = gen_uncertainty(radial_velocities, self.instrument)
+            self.uncertainty = np.minimum(50, gen_uncertainty(radial_velocities, self.instrument))
             
             # we should add noise to model's radial velocity (based on generated parameters)
             # to get our final simulated data for radial velocity 
@@ -356,16 +355,15 @@ class BinarySystem:
             #generate random values from given parameters
             self.mu = parameters[0]
             self.e = parameters[1]
-            self.I = parameters[2]
-            self.omega = parameters[3]
-            self.T = parameters[4]
-            self.tau = parameters[5]
-            self.v_0 = parameters[6]
+            self.omega = parameters[2]
+            self.T = parameters[3]
+            self.tau = parameters[4]
+            self.v_0 = parameters[5]
 
             t = np.linspace(0, 3e8, num_points)
             self.time = t
             radial_velocities = radial_velocity(t, self.mu, self.T, 
-                                                      self.I, self.e, self.v_0, self.omega, self.tau)
+                                                      self.e, self.v_0, self.omega, self.tau)
 
             self.uncertainty = gen_uncertainty(radial_velocities, self.instrument)
             
@@ -382,7 +380,6 @@ class BinarySystem:
             #no known parameters
             self.mu = None
             self.e = None
-            self.I = None
             self.omega = None
             self.T = None
             self.tau = None
@@ -399,7 +396,7 @@ class BinarySystem:
         else:
             raise ValueError('Only certain combinations of inputs are accepted when defining a BinarySystem.')
     
-    labels = [r"$\mu$", r"$e$", r"$I$", r"$\omega$", r"$T$", r"$\tau$", r"$v_0$"]
+    labels = [r"$\mu$", r"$e$", r"$\omega$", r"$T$", r"$\tau$", r"$v_0$"]
 
     def truth(self):
         """ (self) -> (np.array)
@@ -407,7 +404,6 @@ class BinarySystem:
         """
         ans = [self.mu,
                 self.e,
-                self.I,
                 self.omega,
                 self.T,
                 self.tau,
@@ -418,21 +414,19 @@ class BinarySystem:
     
     def log_likelihood(self, theta):
         # note theta = [mu, e, I, omega, T, tau, v_0]
-        mu, e, I, omega, T, tau, v_0 = theta 
-        model = radial_velocity(self.time, mu, T, I, e, v_0, omega, tau)
+        mu, e, omega, T, tau, v_0 = theta 
+        model = radial_velocity(self.time, mu, T, e, v_0, omega, tau)
         
         return -0.5*np.sum((self.radial_velocity - model)**2 / self.uncertainty**2 + np.log(2*np.pi*self.uncertainty**2))
         
 
     def log_prior(self, theta):
-        mu, e, I, omega, T, tau, v_0 = theta 
+        mu, e, omega, T, tau, v_0 = theta 
         
         # based on prior research on allowed values 
-        if 0> mu or 1.246059e6 <= mu:
+        if -1.246059e6> mu or 1.246059e6 <= mu:
             return -np.inf
         elif 3282.3503 > T or 3.46896e13 < T:
-            return -np.inf
-        elif -np.pi >= I or np.pi < I:
             return -np.inf
         elif 0 > e or 1 <= e:
             return -np.inf
@@ -453,14 +447,14 @@ class BinarySystem:
     
     
     
-    def initialize_mcmc(self, nwalkers, ndim=7):
+    def initialize_mcmc(self, nwalkers, ndim=6):
         """ (self, int, int) -> ()
         Sets up the MCMC in self.sampler with nwalkers walkers and ndim dimension.
         """
         self.sampler = emcee.EnsembleSampler(nwalkers, ndim, self.log_post)
         self.nwalkers = nwalkers
 
-    def run_mcmc(self, num_iter, nwalkers=None, ndim=7):
+    def run_mcmc(self, num_iter, nwalkers=None, ndim=6):
         """ (self, int, int, int) -> ()
         Runs the MCMC with num_iter iterations.
         If the MCMC is not initialized, sets it up with nwalkers walkers and ndim dimension.
@@ -471,9 +465,8 @@ class BinarySystem:
             self.initialize_mcmc(nwalkers, ndim)
         
         # note [mu, e, I, omega, T, tau, v_0] = theta
-        initial_pos = [[np.random.uniform(0, 1.246059e6), #mu
+        initial_pos = [[np.random.uniform(-1.246059e6, 1.246059e6), #mu
                                 np.random.uniform(0, 1), #e
-                                np.random.uniform(-np.pi, np.pi), #I
                                 np.random.uniform(0, np.pi/2), #omega
                                 np.random.uniform(3282.3503, 3.46896e13), #T
                                 np.random.uniform(3282.3503, 3.46896e13), #tau
@@ -514,7 +507,7 @@ class BinarySystem:
         plt.ylabel('Radial Velocity (m/s)')
         plt.show()
 
-    def trace(self, ndim=7, flat=False, thin=1, discard=0):
+    def trace(self, ndim=6, flat=False, thin=1, discard=0):
         """ (self, int, boolean, int, int) -> ()
         Displays trace plot of the MCMC.
         """
@@ -592,8 +585,8 @@ class BinarySystem:
 
         t = np.linspace(min(self.time), max(self.time), 1000)
         for idx in indices:
-            mu, e, I, omega, T, tau, v_0 = samples[idx]
-            y = radial_velocity(t, mu, T, I, e, v_0, omega, tau)
+            mu, e, omega, T, tau, v_0 = samples[idx]
+            y = radial_velocity(t, mu, T, e, v_0, omega, tau)
             plt.plot(t, y, color='red', alpha=alpha)
 
         plt.errorbar(self.time, self.radial_velocity, self.uncertainty, 
