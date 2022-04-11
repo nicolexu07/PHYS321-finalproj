@@ -2,7 +2,9 @@ import pandas as pd
 import numpy as np
 from io import StringIO
 import re
-from scipy.optimize import fsolve
+import paramiko
+import scipy
+from scipy.optimize import fsolve, curve_fit
 from astropy import constants as const
 import emcee
 import corner
@@ -300,14 +302,21 @@ class BinarySystem:
     """
     Represents a Binary System
     """
-    def __init__(self, data=None, parameters=None, num_points=None):
-        """ (self, pd.DataFrame, np.array(), int)
+    def __init__(self, data=None, parameters=None, num_points=None, tmax=None):
+        """ (self, pd.DataFrame, np.array(), int, num)
 
+        If no inputs are given, raise a ValueError. 
 
-        If no inputs are given, then raise a ValueError. 
-        If data is given, then use that data (assumes proper format).
-        If parameters and num_points are given, then generates num_points radial velocity data (adds noise).
-        If only num_points is given, then generates random parameters and num_points radial velocity data (adds noise).
+        If data is given, use that data (assumes proper format).
+
+        If parameters and num_points are given, generates num_points radial velocity data between times 0 and tmax (adds noise). 
+        The parameters ought to have a certain order:
+        [mu, e, omega, T, tau, v_0]
+        T and tau are expected to be in units of seconds, this method handles taking their logarithm.
+
+        If only num_points is given, generates random parameters and num_points radial velocity data between times 0 and tmax (adds noise).
+
+        If tmax is not specified, defaults to 3e8.
         """
         if (data is None) and (parameters is None) and (num_points is None):
             raise ValueError('At least one initializing argument must be specified.')
@@ -328,7 +337,10 @@ class BinarySystem:
             self.v_0 = np.random.choice(np.linspace(-9000, 9000, 10000)) # in m/s
             
             # generating radial velocity data from parameters
-            t = np.linspace(0, 3e8, num_points)
+            if tmax is None:
+                t = np.linspace(0, 3e8, num_points)
+            else:
+                t = np.linspace(0, tmax, num_points)
             self.time = t
             radial_velocities = radial_velocity(t, self.mu, 10**self.log_T, 
                                                       self.e, self.v_0, self.omega, 10**self.log_tau)
@@ -360,7 +372,10 @@ class BinarySystem:
             self.log_tau = np.log10(parameters[4])
             self.v_0 = parameters[5]
 
-            t = np.linspace(0, 3e8, num_points)
+            if tmax is None:
+                t = np.linspace(0, 3e8, num_points)
+            else:
+                t = np.linspace(0, tmax, num_points)
             self.time = t
             radial_velocities = radial_velocity(t, self.mu, 10**self.log_T, 
                                                       self.e, self.v_0, self.omega, 10**self.log_tau)
@@ -413,6 +428,10 @@ class BinarySystem:
     
     
     def log_likelihood(self, theta):
+        """ (self, np.array) -> (num)
+        The log probability of measuring self.data given a system with parameters theta. The probability is determined
+        by a Gaussian distribution where each data point is assumed to be independent of the others.         
+        """
         # note theta = [mu, e, I, omega, T, tau, v_0]
         mu, e, omega, log_T, log_tau, v_0 = theta 
         model = radial_velocity(self.time, mu, 10**log_T, e, v_0, omega, 10**log_tau)
@@ -421,6 +440,9 @@ class BinarySystem:
         
 
     def log_prior(self, theta):
+        """ (self, np.array) -> (np.inf/float)
+        tau must be less than T, this inequality follows to the logarithms of these values.
+        """
         mu, e, omega, log_T, log_tau, v_0 = theta 
         
         # based on prior research on allowed values 
@@ -440,6 +462,9 @@ class BinarySystem:
 
 
     def log_post(self, theta):
+        """ (self, np.array) -> (np.inf/num)
+        log(posterior) = log(likelihood) + log(prior) + const.
+        """
         lp = self.log_prior(theta)
         if not np.isfinite(lp):
             return -np.inf
@@ -456,7 +481,7 @@ class BinarySystem:
 
     def run_mcmc(self, num_iter, nwalkers=None, ndim=6):
         """ (self, int, int, int) -> ()
-        Runs the MCMC with num_iter iterations.
+        Runs the MCMC with num_iter iterations and random initial conditions.
         If the MCMC is not initialized, sets it up with nwalkers walkers and ndim dimension.
         """
         if (self.sampler is None) and (nwalkers is None):
@@ -501,6 +526,9 @@ class BinarySystem:
         self.samples = self.sampler.get_chain(flat=flat, thin=thin, discard=discard)
 
     def plot_data(self, ls='', marker='.', color='blue', title=None):
+        """ (self, str, str, str, str) -> ()
+        Shows a plot of the BinarySystem's radial velocity data as a function of time.
+        """
         plt.figure()
 
         plt.errorbar(self.time, self.radial_velocity, self.uncertainty, 
@@ -590,29 +618,44 @@ class BinarySystem:
             plt.show()
         """
 
-    def plot_samples(self, num_samples, thin=1, discard=250, alpha=0.2, title=None):
+    def plot_samples(self, num_samples, thin=1, discard=250, alpha=0.2, title=None, least_squares=False):
         """ (self, int, int, int) -> ()
-        Plots sample curves from the results of the MCMC. 
+        Plots num_samples sample curves from the results of the MCMC if least_squares is False. If least_squares is  
+        True then only plots the result from the nonlinear least-squares fitting of radial_velocity to the data.
         """
-        samples = self.get_samples(flat=True, thin=thin, discard=discard)
-        indices = np.random.randint(0, len(samples), size=num_samples)
         plt.figure()
 
         t = np.linspace(min(self.time), max(self.time), 1000)
-        for idx in indices:
-            mu, e, omega, log_T, log_tau, v_0 = samples[idx]
-            y = radial_velocity(t, mu, 10**log_T, e, v_0, omega, 10**log_tau)
-            plt.plot(t, y, color='red', alpha=alpha)
+        if least_squares:
+            param, param_cov = self.least_squares_fit()
+            mu, e, omega, T, tau, v_0 = param
+            y = radial_velocity(t, mu, T, e, v_0, omega, tau)
+            plt.plot(t, y, color='red', label='Fit')
+        else:
+            samples = self.get_samples(flat=True, thin=thin, discard=discard)
+            indices = np.random.randint(0, len(samples), size=num_samples)
+            for idx in indices:
+                mu, e, omega, log_T, log_tau, v_0 = samples[idx]
+                y = radial_velocity(t, mu, 10**log_T, e, v_0, omega, 10**log_tau)
+                plt.plot(t, y, color='red', alpha=alpha)
 
         plt.errorbar(self.time, self.radial_velocity, self.uncertainty, 
-                        ls='', marker='.', color='blue', elinewidth=0.5)
+                        ls='', marker='.', color='blue', elinewidth=0.5, label='Data')
 
         if title is not None:
             plt.title(title)
         plt.xlabel('Time (s)')
+        plt.legend()
         plt.ylabel('Radial Velocity (m/s)')
         plt.ylim(np.amin(self.radial_velocity-self.uncertainty)-5, np.amax(self.radial_velocity+self.uncertainty)+5)
         plt.show()
+
+
+    def least_squares_fit(self):
+        """ (self) -> (np.array, np.array)
+        Uses scipy.optimize.curve_fit to fit the radial_velocity function to the data.
+        """
+        return curve_fit(radial_velocity, self.time, self.radial_velocity, sigma=self.uncertainty)
 
 if __name__ == "__main__":
     import doctest
