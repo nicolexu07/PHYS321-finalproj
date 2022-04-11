@@ -594,6 +594,7 @@ class BinarySystem:
 
         plt.xlabel('Time (s)')
         plt.ylabel('Radial Velocity (m/s)')
+        plt.ylim(np.amin(self.data-self.uncertainty)-5, np.amax(self.data+self.uncertainty)+5)
         plt.show()
 
 if __name__ == "__main__":
