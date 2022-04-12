@@ -12,7 +12,7 @@
   - [X] Generate parameters
   - [X] Generate radial velocity data given parameters
   - [X] Establish uncertainty on generated data using histograms of known data uncertainty
-  - [X] Add Gaussian noise
+  - [X] Add Gaussian noise scaled by data point's uncertainty
 - [X] Implement radial velocity function v(t)=&kappa;[cos(_f_+&omega;)+_e_*cos(&omega;)]+v<sub>0</sub> (Nicole)
   - [X] Make function for &kappa;
   - [X] Solve u-_e_*sin(u)=2&pi;(t-&tau;)/_T_ for u using scipy.optimize.fsolve
@@ -25,7 +25,7 @@
 - [X] Format data (William)
   - [X] Dates are in Julian days, find out how to convert to seconds
   - [X] Double-check proper data types in each column  
-- [ ] Test functions (William & Nicole)
+- [X] Test functions (William & Nicole)
   - [X] Test loading data (William)
   - [X] Test loading info (William & Nicole)
   - [X] Test formatting data (William)
@@ -34,6 +34,10 @@
 - [ ] Misc. (William & Nicole)
   - [X] Function to find data files given star ID (William)
   - [X] Function to find data files given telescope/instrument (Nicole)
+  - [X] Use log(_T_) and log(&tau;) as parameters (William) 
+  - [ ] Add documentation to each function/method (William & Nicole)
+  - [ ] Add comments explaining code segments (William & Nicole)
+  - [ ] Add Markdown in Jupyter notebooks for clarity (William & Nicole)
 - [ ] Code MCMC with a class called BinarySystem (William & Nicole) 
   - [X] \_\_init\_\_ method should take radial velocity data as input (William & Nicole)
   - [X] Method to run MCMC (William)
@@ -71,7 +75,6 @@
 - [ ] Systems of special interest and ways to test the limits of our MCMC and our model
   - [ ] HD 142, binary star system with 2-3 exoplanets
   - [ ] Generate fake data of a system with no exoplanets (&mu;=0, expect v(r)=constant)
-  - [ ] Generate fake data for system with orbital plane perpendicular to the line of sight (_I_=&pm;&pi;/2, expect v(r)=constant)
   - [ ] Generate and place outliers into data (would require us to make a new child class)
   - [ ] Remove chunks of data to simulate equipment failure
   - [ ] Adding different kinds of noise to the data     
