@@ -620,7 +620,8 @@ class BinarySystem:
         plt.figure()
         plt.hist(ans, bins=bins)
         if actual_value is not None:
-            plt.vlines(actual_value, ymin=0, ymax=1.25*max(ans), color='black')
+            count, temp = np.histogram(ans, bins=bins)
+            plt.vlines(actual_value, ymin=0, ymax=1.05*max(count), color='black')
         if title is not None:
             plt.title(title)
         plt.xlabel(BinarySystem.labels[param])
