@@ -316,6 +316,8 @@ def plot_ellipse(e, a=1, points=1000, title=None):
     plt.ylim(-a, a)
     plt.xlim(-a, a)
     plt.show()
+
+
 class BinarySystem:
     """
     Represents a Binary System
@@ -349,7 +351,7 @@ class BinarySystem:
             # generating values for parameters
             self.mu = np.random.choice(np.linspace(-1.246059e6, 1.246059e6, 20000)) # in kg
             self.e = np.random.uniform(0, 1)
-            self.omega = np.random.uniform(0, np.pi/2)
+            self.omega = np.random.uniform(0, np.pi*2)
             self.log_T = np.random.uniform(3.516184928, 13.54019929) # in seconds
             self.log_tau = np.random.uniform(3.516184928, self.log_T) # in seconds
             self.v_0 = np.random.choice(np.linspace(-9000, 9000, 10000)) # in m/s
@@ -472,7 +474,7 @@ class BinarySystem:
             return -np.inf
         elif -100000 > v_0 or 100000 < v_0:
             return -np.inf
-        elif 0 > omega or np.pi/2 < omega:
+        elif 0 > omega or np.pi*2 < omega:
             return -np.inf
         elif 3.516184928 > log_tau or log_T < log_tau:
             return -np.inf
@@ -512,7 +514,7 @@ class BinarySystem:
         for i in range(self.nwalkers):
             temp = [np.random.uniform(-1.246059e6, 1.246059e6), #mu
                     np.random.uniform(0, 1), #e
-                    np.random.uniform(0, np.pi/2), #omega
+                    np.random.uniform(0, np.pi*2), #omega
                     np.random.uniform(3.516184928, 13.54019929)] #log_T
             temp.append(np.random.uniform(3.516184928, temp[-1])) #log_tau
             temp.append(np.random.uniform(-9999, 9999))#v_0
