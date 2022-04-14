@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from io import StringIO
 import re
-import paramiko
 import scipy
 from scipy.optimize import fsolve, curve_fit
 from astropy import constants as const
