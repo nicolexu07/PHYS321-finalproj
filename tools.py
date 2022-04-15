@@ -260,7 +260,9 @@ def plot_uncertainty_correlation():
     plt.scatter(radial_velocities, uncertainties, s=0.1)
     plt.xlim(-100, 100)
     plt.ylim(0, 50)  
-    
+    plt.xlabel('Uncertainty (m/s)')
+    plt.ylabel('Radial Velocity (m/s)')
+    plt.title(f'Relationship between Radial Velocity for all Binary Systems in Survey')
     
 def plot_uncertainty_correlation_telescope(telescope):
     """ (str) -> ()
