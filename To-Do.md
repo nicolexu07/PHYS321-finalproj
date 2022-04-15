@@ -52,24 +52,26 @@
   - [X] Prior (Nicole)
   - [X] Posterior (Nicole)
 - [ ] Report writing (William & Nicole)
-  - [ ] Abstract
-  - [ ] Introduction
-    - [ ] Describe problem
-    - [X] Present equations (William)
+  - [ ] Abstract (Nicole)
+  - [ ] Introduction (William)
+    - [X] Describe problem
+    - [X] Present equations
   - [ ] Methods (William & Nicole)
-    - [ ] Describe MCMC and emcee package
+    - [ ] Describe MCMC and emcee package (Nicole)
     - [X] Present range on parameters (priors) (William)
     - [ ] Describe data generation procedure (Nicole)
-  - [ ] Results
-    - [ ] HD 129445 (William)
-    - [X] &mu;=0 (William)
-    - [ ] Limitations
+  - [X] Results (William)
+    - [X] HD 129445 
+    - [X] &mu;=0
+    - [X] Limitations
   - [ ] Conclusion
   - [ ] Misc. 
+    - [ ] Title & Subtitle
     - [ ] Format equations and in-text references 
     - [ ] Format figures
     - [ ] Citations
-- Systems of special interest and ways to test the limits of our MCMC and our model
+
+Systems of special interest and ways to test the limits of our MCMC and our model
   - HD 142, binary star system with 2-3 exoplanets
   - Generate fake data of a system with no exoplanets (&mu;=0, expect v(r)=constant)
   - Generate and place outliers into data (would require us to make a new child class)
