@@ -38,7 +38,8 @@
   - [ ] Add documentation to each function/method (William & Nicole)
   - [ ] Add comments explaining code segments (William & Nicole)
   - [ ] Add Markdown in Jupyter notebooks for clarity (William & Nicole)
-- [ ] Code MCMC with a class called BinarySystem (William & Nicole) 
+  - [X] Writing intro - description of parameters and model (Nicole) 
+- [X] Code MCMC with a class called BinarySystem (William & Nicole) 
   - [X] \_\_init\_\_ method should take radial velocity data as input (William & Nicole)
   - [X] Method to run MCMC (William)
   - [X] Method to get samples (William)
@@ -50,31 +51,27 @@
   - [X] Likelihood (Nicole)
   - [X] Prior (Nicole)
   - [X] Posterior (Nicole)
-- [ ] Formatting Jupyter Notebook
-  - [ ] Writing intro - description of parameters and model (Nicole) 
-  - [ ] Calling functions for MCMC
 - [ ] Report writing (William & Nicole)
+  - [ ] Abstract
   - [ ] Introduction
     - [ ] Describe problem
-    - [ ] Present equations
-  - [ ] Methods
+    - [X] Present equations (William)
+  - [ ] Methods (William & Nicole)
     - [ ] Describe MCMC and emcee package
-    - [ ] Present range on parameters (priors)
-  - [ ] Results for stars from some of the online datasets
-    - [ ] Corner plot
-    - [ ] Compare to literature values from other methods
-  - [ ] Stress tests of MCMC
-    - [ ] Describe scenarios where the MCMC might be pushed to its limit (see bottom of document)
-    - [ ] Present results for these scenarios
-    - [ ] Talk about the significance of the results
+    - [X] Present range on parameters (priors) (William)
+    - [ ] Describe data generation procedure (Nicole)
+  - [ ] Results
+    - [ ] HD 129445 (William)
+    - [X] &mu;=0 (William)
+    - [ ] Limitations
   - [ ] Conclusion
   - [ ] Misc. 
     - [ ] Format equations and in-text references 
     - [ ] Format figures
     - [ ] Citations
-- [ ] Systems of special interest and ways to test the limits of our MCMC and our model
-  - [ ] HD 142, binary star system with 2-3 exoplanets
-  - [ ] Generate fake data of a system with no exoplanets (&mu;=0, expect v(r)=constant)
-  - [ ] Generate and place outliers into data (would require us to make a new child class)
-  - [ ] Remove chunks of data to simulate equipment failure
-  - [ ] Adding different kinds of noise to the data     
+- Systems of special interest and ways to test the limits of our MCMC and our model
+  - HD 142, binary star system with 2-3 exoplanets
+  - Generate fake data of a system with no exoplanets (&mu;=0, expect v(r)=constant)
+  - Generate and place outliers into data (would require us to make a new child class)
+  - Remove chunks of data to simulate equipment failure
+  - Adding different kinds of noise to the data     
