@@ -625,6 +625,8 @@ class BinarySystem:
             plt.vlines(actual_value, ymin=0, ymax=1.05*max(count), color='black')
         if title is not None:
             plt.title(title)
+        if limits is not None:
+            plt.xlim(limits)
         plt.xlabel(BinarySystem.labels[param])
         plt.ylabel("Count")
         plt.show()
