@@ -31,13 +31,13 @@
   - [X] Test formatting data (William)
   - [X] Test solve_for_u function (William & Nicole)
   - [X] Test functions for finding files with data pertaining to a given star (William)
-- [ ] Misc. (William & Nicole)
+- [X] Misc. (William & Nicole)
   - [X] Function to find data files given star ID (William)
   - [X] Function to find data files given telescope/instrument (Nicole)
   - [X] Use log(_T_) and log(&tau;) as parameters (William) 
-  - [ ] Add documentation to each function/method (William & Nicole)
-  - [ ] Add comments explaining code segments (William & Nicole)
-  - [ ] Add Markdown in Jupyter notebooks for clarity (William & Nicole)
+  - [X] Add documentation to each function/method (William & Nicole)
+  - [X] Add comments explaining code segments (William & Nicole)
+  - [X] Add Markdown in Jupyter notebooks for clarity (William & Nicole)
   - [X] Writing intro - description of parameters and model (Nicole) 
 - [X] Code MCMC with a class called BinarySystem (William & Nicole) 
   - [X] \_\_init\_\_ method should take radial velocity data as input (William & Nicole)
@@ -51,29 +51,22 @@
   - [X] Likelihood (Nicole)
   - [X] Prior (Nicole)
   - [X] Posterior (Nicole)
-- [ ] Report writing (William & Nicole)
-  - [ ] Abstract (Nicole)
-  - [ ] Introduction (William)
+- [X] Report writing (William & Nicole)
+  - [X] Abstract (Nicole)
+  - [X] Introduction (William)
     - [X] Describe problem
     - [X] Present equations
-  - [ ] Methods (William & Nicole)
-    - [ ] Describe MCMC and emcee package (Nicole)
+  - [X] Methods (William & Nicole)
+    - [X] Describe MCMC and emcee package (Nicole)
     - [X] Present range on parameters (priors) (William)
-    - [ ] Describe data generation procedure (Nicole)
+    - [X] Describe data generation procedure (Nicole)
   - [X] Results (William)
     - [X] HD 129445 
     - [X] &mu;=0
     - [X] Limitations
-  - [ ] Conclusion
-  - [ ] Misc. 
-    - [ ] Title & Subtitle
-    - [ ] Format equations and in-text references 
-    - [ ] Format figures
-    - [ ] Citations
-
-Systems of special interest and ways to test the limits of our MCMC and our model
-  - HD 142, binary star system with 2-3 exoplanets
-  - Generate fake data of a system with no exoplanets (&mu;=0, expect v(r)=constant)
-  - Generate and place outliers into data (would require us to make a new child class)
-  - Remove chunks of data to simulate equipment failure
-  - Adding different kinds of noise to the data     
+  - [X] Conclusion (William & Nicole)
+  - [X] Misc. 
+    - [X] Title & Subtitle
+    - [X] Format equations and in-text references 
+    - [X] Format figures
+    - [X] Citations 
