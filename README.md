@@ -4,6 +4,11 @@ __tools.py__ contains code for functions to format data, create simulations, run
 
 __Exoplanet_Parameter_Detection.ipynb__ calls functions from tools.py to run our simulations and MCMC and visualize results.
 
+## Work Distribution Summary
+
+Nicole Xu: Implementation of radial velocity function, posterior, likelihood, priors. Data simulation (exploring uncertainty, generating parameter values, adding noise). Report writing (abstract, methods, conclusion).
+
+William Pugsley: Retrieving, formating, and searching through data files. Graphing methods for BinarySystem class. Report writing (introduction, methods, results, conclusion).
 
 ## Other Files (that you don't need to look at):
 
