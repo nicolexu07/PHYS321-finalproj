@@ -453,8 +453,16 @@ class BinarySystem:
         The log probability of measuring self.data given a system with parameters theta. The probability is determined
         by a Gaussian distribution where each data point is assumed to be independent of the others.         
         """
+        
         # note theta = [mu, e, I, omega, T, tau, v_0]
         mu, e, omega, log_T, log_tau, v_0 = theta 
+        
+        
+        # since these distributions usually span orders of magnitude, we take the log
+        # the emcee package requires the log of the posterior as input 
+        
+        # since exponentials are computationally expensive, we also simplify the equation 
+        # when we code it up to get the following 
         model = radial_velocity(self.time, mu, 10**log_T, e, v_0, omega, 10**log_tau)
         
         return -0.5*np.sum((self.radial_velocity - model)**2 / self.uncertainty**2 + np.log(2*np.pi*self.uncertainty**2))
@@ -465,6 +473,10 @@ class BinarySystem:
         tau must be less than T, this inequality follows to the logarithms of these values.
         """
         mu, e, omega, log_T, log_tau, v_0 = theta 
+        
+        # since these distributions usually span orders of magnitude, we take the log
+        # the emcee package requires the log of the posterior as input 
+        # so we have log(1) = 0 and log(0) = -inf
         
         # based on prior research on allowed values 
         if -1.246059e6> mu or 1.246059e6 <= mu:
@@ -486,6 +498,8 @@ class BinarySystem:
         """ (self, np.array) -> (np.inf/num)
         log(posterior) = log(likelihood) + log(prior) + const.
         """
+        # log of the posterior since these distributions usually span orders of magnitude
+        # and the emcee package requires the log of the posterior as input 
         lp = self.log_prior(theta)
         if not np.isfinite(lp):
             return -np.inf
